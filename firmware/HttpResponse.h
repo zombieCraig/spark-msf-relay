@@ -101,23 +101,24 @@ public:
 class HttpResponseStatic : public HttpResponse {
 private:
 /// Reference on the body content.
-    const void *const fBody;
+//    const void *const fBody;
+    const String fBody;
 /// Length of the body content.
     const size_t fLength;
     
 protected:
     Stream& printBody(Stream& aStream) const { 
-        if (fBody && fLength)
-            aStream.write(static_cast<const uint8_t *const>(fBody), fLength); 
+            aStream.write(fBody); 
         return aStream;
     }
 
 public:
-    HttpResponseStatic(const void *const aBody, const size_t aLength, const char *const aContentType = NULL ) :
+    HttpResponseStatic(String aBody, size_t aLength, const char *const aContentType = NULL ) :
         HttpResponse(),
         fBody(aBody),
         fLength(aLength)
     { 
+        contentLength(aLength);
         if (aContentType)
             contentType(aContentType);
     }

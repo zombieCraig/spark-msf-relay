@@ -2,6 +2,7 @@
  * @file
  * @copyright Copyright Â© 2014 by Marc Sibert
  * @author Marc Sibert
+ * @author Craig Smith
  * 
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -11,10 +12,10 @@
  
 #include "HttpResponse.h"
 
-const char* const HttpResponse::DEFAULT_CONTENT_TYPE = "Content-Type: text/html; charset=utf-8";
+const char* const HttpResponse::DEFAULT_CONTENT_TYPE = "Content-Type: application/json";
 
 void operator<<(Stream& aStream, const HttpResponse& aResponse) {
-    aStream.print("http/1.1 ");
+    aStream.print("HTTP/1.1 ");
     aStream.print(aResponse.fStatus);
     switch (aResponse.fStatus) {
         case 200 : 
@@ -28,17 +29,17 @@ void operator<<(Stream& aStream, const HttpResponse& aResponse) {
             break;
     }
     if (aResponse.fContentType) {
-        aStream.print("Content-Type: text/html; charset=utf-8\r\n"); 
+        aStream.print("Content-Type: text/html; application/json\r\n"); 
         aStream.print(aResponse.fContentType); 
         aStream.print("\r\n");
     }
+    aStream.print("Connection: close\r\n");
+    aStream.print("Server: Apache\r\n");
     if (aResponse.fContentLength >= 0) {
         aStream.print("Content-Length:"); 
         aStream.print(aResponse.fContentLength); 
         aStream.print("\r\n");
     }
-    aStream.print("Server: MServer 0.1\r\n");
-    aStream.print("Connection: close\r\n");
     aStream.print("\r\n");
     
     aResponse.printBody(aStream);
