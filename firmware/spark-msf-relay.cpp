@@ -17,7 +17,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "MsfRelay.h"
+#include "spark-msf-relay.h"
 
 MSFRelay::MSFRelay() : TCPServer(8080) {
   rtc.begin(&UDPClient, "north-america.pool.ntp.org");
