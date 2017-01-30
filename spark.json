@@ -1,7 +1,0 @@
-{
-    "name": "spark-msf-relay",
-    "version": "0.0.1",
-    "author": "Craig Smith",
-    "license": "GPLv3",
-    "description": "This is a REST Server built to support the Metasploit HWBridge API.  It's a modified server from CaptainIgloo/spark-web-embed-rest-json"
-}
