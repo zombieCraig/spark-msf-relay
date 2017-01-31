@@ -22,7 +22,7 @@
 MSFRelay::MSFRelay() : TCPServer(8080) {
   rtc.begin(&UDPClient, "north-america.pool.ntp.org");
   rtc.setTimeZone(-8); // gmt offset (-8 for PST)
-  startTime = rtc.nowEpoch();
+  startTime = rtc.nowNoUpdate();  //NOTE: There is current an issue with NTP update
   lastTime = 0UL;
   packets_sent = 0UL;
 }
@@ -99,7 +99,7 @@ std::map <String, String>MSFRelay::parseQuery(String url) {
 /* Helper function to increment packet sent and lastTime sent */
 void MSFRelay::incPacketCount() {
     packets_sent++;
-    lastTime = rtc.nowEpoch();
+    lastTime = rtc.nowNoUpdate();
 }
 
 /* Main URL Loop handler.  Distributes call to all the core APIs.  Override
@@ -274,7 +274,7 @@ String MSFRelay::get_device_name() {
  * @return [String] uptime in Epch
  */
 String MSFRelay::get_uptime() {
-  return String(rtc.nowEpoch() - startTime);
+  return String(rtc.nowNoUpdate() - startTime);
 }
 
 /* Gets the packet sent count
@@ -303,7 +303,7 @@ String MSFRelay::get_voltage() {
  @return [String] datetime as Epoch
  */
 String MSFRelay::get_datetime() {
-  return String(rtc.nowEpoch());
+  return String(rtc.nowNoUpdate());
 }
 
 /* Returns the timezone

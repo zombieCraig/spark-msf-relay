@@ -6,7 +6,7 @@
 // This is the bare minimum.  It will allow Metasploit to
 // Connect to the device pull some stats and blink an LED
 
-#include "spark-msf-relay/spark-msf-relay.h"
+#include "spark-msf-relay.h"
 
 MSFRelay msf;
 

@@ -81,7 +81,7 @@ uint8_t SparkTime::second(uint32_t tnow) {
 
 
 uint8_t SparkTime::dayOfWeek(uint32_t tnow) {
-  uint32_t dayNum = (tnow + timeZoneDSTOffset(tnow)-SPARKTIMEEPOCHSTART)/SPARKTIMESECPERDAY;   
+  uint32_t dayNum = (tnow + timeZoneDSTOffset(tnow)-SPARKTIMEEPOCHSTART)/SPARKTIMESECPERDAY;
   //Unix epoch day 0 was a thursday
   return ((dayNum+4)%7);
 }
@@ -96,7 +96,7 @@ uint8_t SparkTime::day(uint32_t tnow) {
     dayNum -= YEARSIZE(tempYear);
     tempYear++;
   }
-  
+
   while(dayNum >= _monthLength[LEAPYEAR(tempYear)][tempMonth]) {
     dayNum -= _monthLength[LEAPYEAR(tempYear)][tempMonth];
     tempMonth++;
@@ -114,7 +114,7 @@ uint8_t SparkTime::month(uint32_t tnow) {
     dayNum -= YEARSIZE(tempYear);
     tempYear++;
   }
-  
+
   while(dayNum >= _monthLength[LEAPYEAR(tempYear)][tempMonth]) {
     dayNum -= _monthLength[LEAPYEAR(tempYear)][tempMonth];
     tempMonth++;
@@ -221,7 +221,7 @@ String SparkTime::ISODateString(uint32_t tnow) {
 
   int32_t offset = timeZoneDSTOffset(tnow)/3600L;
   // Guard against timezone problems
-  if (offset>-24 && offset<24) { 
+  if (offset>-24 && offset<24) {
     if (offset < 0) {
       ISOString = ISOString + "-" + _digits[-offset] + "00";
     } else {
@@ -278,7 +278,7 @@ uint32_t SparkTime::nowNoUpdate() {
   if (nowSec >= (_lastSyncNTPTime + _interval)) {
     updateNTPTime();
   }
-  return nowSec;  
+  return nowSec;
 }
 
 uint32_t SparkTime::nowEpoch() {
@@ -301,7 +301,7 @@ void SparkTime::setTimeZone(int32_t hoursOffset) {
 
 bool SparkTime::isUSDST(uint32_t tnow) {
   // 2am 2nd Sunday in March to 2am 1st Sunday in November
-  // can't use offset here 
+  // can't use offset here
   bool result = false;
   uint32_t dayNum = (tnow+_timezone*3600UL-SPARKTIMEBASESTART)/SPARKTIMESECPERDAY;
   uint32_t tempYear = SPARKTIMEBASEYEAR;
@@ -312,33 +312,33 @@ bool SparkTime::isUSDST(uint32_t tnow) {
     dayNum -= YEARSIZE(tempYear);
     tempYear++;
   }
-  
+
   while(dayNum >= _monthLength[LEAPYEAR(tempYear)][tempMonth]) {
     dayNum -= _monthLength[LEAPYEAR(tempYear)][tempMonth];
     tempMonth++;
   }
   tempMonth++;
   dayNum++;			// correct for zero-base
-  
+
   if (tempMonth>3 && tempMonth<11) {
     result = true;
   } else if (tempMonth == 3) {
     if ((dayNum == _usDSTStart[tempYear-SPARKTIMEBASEYEAR] && tempHour >=2) ||
 	(dayNum >  _usDSTStart[tempYear-SPARKTIMEBASEYEAR])) {
       result = true;
-    }      
+    }
   } else if (tempMonth == 11) {
     if (!((dayNum == _usDSTEnd[tempYear-SPARKTIMEBASEYEAR] && tempHour >=2) ||
 	  (dayNum >  _usDSTEnd[tempYear-SPARKTIMEBASEYEAR]))) {
       result = true;
-    }      
+    }
   }
   return result;
 }
 
 bool SparkTime::isEuroDST(uint32_t tnow) {
   // 1am last Sunday in March to 1am on last Sunday October
-  // can't use offset here 
+  // can't use offset here
   bool result = false;
   uint32_t dayNum = (tnow+_timezone*3600UL-SPARKTIMEBASESTART)/SPARKTIMESECPERDAY;
   uint32_t tempYear = SPARKTIMEBASEYEAR;
@@ -349,26 +349,26 @@ bool SparkTime::isEuroDST(uint32_t tnow) {
     dayNum -= YEARSIZE(tempYear);
     tempYear++;
   }
-  
+
   while(dayNum >= _monthLength[LEAPYEAR(tempYear)][tempMonth]) {
     dayNum -= _monthLength[LEAPYEAR(tempYear)][tempMonth];
     tempMonth++;
   }
   tempMonth++;
   dayNum++;			// correct for zero-base
-  
+
   if (tempMonth>3 && tempMonth<10) {
     result = true;
   } else if (tempMonth == 3) {
     if ((dayNum == _EuDSTStart[tempYear-SPARKTIMEBASEYEAR] && tempHour >=1) ||
 	(dayNum >  _EuDSTStart[tempYear-SPARKTIMEBASEYEAR])) {
       result = true;
-    }      
+    }
   } else if (tempMonth == 10) {
     if (!((dayNum == _EuDSTEnd[tempYear-SPARKTIMEBASEYEAR] && tempHour >=1) ||
 	  (dayNum >  _EuDSTEnd[tempYear-SPARKTIMEBASEYEAR]))) {
       result = true;
-    }      
+    }
   }
   return result;
 }
@@ -377,20 +377,20 @@ void SparkTime::updateNTPTime() {
   //digitalWrite(D7,HIGH);
   _isSyncing = true;
   _UDPClient->begin(_localPort);
-  memset(_packetBuffer, 0, SPARKTIMENTPSIZE); 
+  memset(_packetBuffer, 0, SPARKTIMENTPSIZE);
   _packetBuffer[0] = 0b11100011;   // LI, Version, Mode
   _packetBuffer[1] = 0;     // Stratum, or type of clock
   _packetBuffer[2] = 6;     // Polling Interval
   _packetBuffer[3] = 0xEC;  // Peer Clock Precision
   // 4-11 are zero
-  _packetBuffer[12]  = 49; 
+  _packetBuffer[12]  = 49;
   _packetBuffer[13]  = 0x4E;
   _packetBuffer[14]  = 49;
   _packetBuffer[15]  = 52;
 
   _UDPClient->beginPacket(_serverName, 123); //NTP requests are to port 123
   _UDPClient->write(_packetBuffer,SPARKTIMENTPSIZE);
-  _UDPClient->endPacket(); 
+  _UDPClient->endPacket();
   //gather the local offset close to the send time
   uint32_t localmsec = millis();
   int32_t retries = 0;
@@ -404,7 +404,7 @@ void SparkTime::updateNTPTime() {
     _UDPClient->read(_packetBuffer,SPARKTIMENTPSIZE);
     // Handle Kiss-of-death
     if (_packetBuffer[1]==0) {
-      _interval = max(_interval * 2, 24UL*60UL*60UL); 
+      _interval = max(_interval * 2, 24UL*60UL*60UL);
     }
     _lastSyncNTPTime = _packetBuffer[40] << 24 | _packetBuffer[41] << 16 | _packetBuffer[42] << 8 | _packetBuffer[43];
     _lastSyncNTPFrac = _packetBuffer[44] << 24 | _packetBuffer[45] << 16 | _packetBuffer[46] << 8 | _packetBuffer[47];
@@ -412,7 +412,7 @@ void SparkTime::updateNTPTime() {
     _syncedOnce = true;
   }
   //digitalWrite(D7,LOW);
-  _UDPClient->stop();  
+  _UDPClient->stop();
   _isSyncing = false;
 }
 
@@ -421,6 +421,6 @@ int32_t SparkTime::timeZoneDSTOffset(uint32_t tnow) {
   if ((_useDST && (!_useEuroDSTRule  && isUSDST(tnow))) ||
       (_useDST && (_useEuroDSTRule && isEuroDST(tnow)))) {
     result += 3600UL;
-  } 
+  }
   return result;
 }
