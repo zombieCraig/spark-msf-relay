@@ -49,33 +49,34 @@ public:
   String get_api_timezone();
   String get_api_ipconfig();
   /* Overrides */
-  String get_operational();
-  String get_hw_specialty();
-  String get_hw_capabilities();
-  String get_api_version();
-  String get_fw_version();
-  String get_hw_version();
-  String get_device_name();
-  String get_uptime();
-  String get_packets_sent();
-  String get_lasttime();
-  String get_voltage();
-  String get_datetime();
-  String get_timezone();
-  String get_ip_setup();
-  String get_ip4_addr();
-  String get_ip4_netmask();
-  String get_ip4_gateway();
-  String get_ip4_dns();
-  String get_custom_methods();
-  String not_supported();
-  bool on_request_uri(String);
+  virtual String get_operational();
+  virtual String get_hw_specialty();
+  virtual String get_hw_capabilities();
+  virtual String get_api_version();
+  virtual String get_fw_version();
+  virtual String get_hw_version();
+  virtual String get_device_name();
+  virtual String get_uptime();
+  virtual String get_packets_sent();
+  virtual String get_lasttime();
+  virtual String get_voltage();
+  virtual String get_datetime();
+  virtual String get_timezone();
+  virtual String get_ip_setup();
+  virtual String get_ip4_addr();
+  virtual String get_ip4_netmask();
+  virtual String get_ip4_gateway();
+  virtual String get_ip4_dns();
+  virtual String get_custom_methods();
+  virtual String not_supported();
+  virtual bool on_request_uri(String);
+  // Client for responses
+  TCPClient client;
 private:
   unsigned long startTime;
   unsigned long lastTime;
   SparkTime rtc;
   UDP UDPClient;
-  TCPClient client;
   unsigned long packets_sent;
 };
 
