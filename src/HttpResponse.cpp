@@ -44,9 +44,3 @@ void operator<<(Stream& aStream, const HttpResponse& aResponse) {
     
     aResponse.printBody(aStream);
 }
-
-/**
- * Global defined err204 : HTTP 204 No Content.
- * Note : using this status, "the client SHOULD NOT change its document view..."    
- */
-Err204 err204;

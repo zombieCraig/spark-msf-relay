@@ -125,14 +125,4 @@ public:
     
 };
 
-class Err204 : public HttpResponseStatic {
-public:
-    Err204() :
-        HttpResponseStatic(NULL, 0) {
-            status(204);
-        };
-};
-
-extern Err204 err204;
-
 #endif // __HTTP_RESPONSE_H__
